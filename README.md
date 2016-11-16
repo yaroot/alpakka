@@ -15,7 +15,7 @@ Contributions
 
 Contributions are welcome, see [CONTRIBUTING.md](https://github.com/akka/alpakka/blob/master/CONTRIBUTING.md)
 
-Caveat Emptor
--------------
+Caveat Emptor - Binary Compatibility
+------------------------------------
 
 A component in this project does not have to obey the rule of staying binary compatible between releases. Breaking API changes may be introduced without notice as we refine and simplify based on your feedback. A module may be dropped in any release without prior deprecation. The Lightbend subscription does not cover support for these modules.
