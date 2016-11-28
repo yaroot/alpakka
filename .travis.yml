@@ -27,16 +27,7 @@ cache:
 services:
   - docker
 
-sbt_args: -J-XX:ReservedCodeCacheSize=128m
-
-deploy:
-  provider: script
-  script:
-    # do the maven central sync only once, as all of the artifacts are under the same bintray package
-    - sbt -J-XX:ReservedCodeCacheSize=128m +publish amqp/bintraySyncMavenCentral
-  on:
-    tags: true
-    repo: akka/alpakka
+script: project/travis.sh
 
 env:
   global:
