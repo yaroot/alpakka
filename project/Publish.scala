@@ -39,7 +39,6 @@ object PublishUnidoc extends AutoPlugin {
 
   override def projectSettings = unidocSettings ++ Seq(
     doc in Compile := (doc in ScalaUnidoc).value,
-    target in unidoc in ScalaUnidoc := crossTarget.value / "api",
     publishConfiguration ~= publishOnly(Artifact.DocType),
     publishLocalConfiguration ~= publishOnly(Artifact.DocType)
   )
