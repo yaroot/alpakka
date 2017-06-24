@@ -3,15 +3,13 @@
  */
 package akka.stream.alpakka.s3.impl
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.model.{HttpEntity, MediaTypes}
-import akka.stream.alpakka.s3.{BufferType, MemoryBufferType, Proxy, S3Settings}
 import akka.stream.alpakka.s3.acl.CannedAcl
 import akka.stream.alpakka.s3.auth.AWSCredentials
+import akka.stream.alpakka.s3.{BufferType, MemoryBufferType, Proxy, S3Settings}
 import akka.stream.scaladsl.Source
-import com.typesafe.config.ConfigFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -23,8 +21,9 @@ class HttpRequestsSpec extends FlatSpec with Matchers with ScalaFutures {
                   proxy: Option[Proxy] = None,
                   awsCredentials: AWSCredentials = AWSCredentials("", ""),
                   s3Region: String = "us-east-1",
+                  secureAccess: Boolean = true,
                   pathStyleAccess: Boolean = false) =
-    new S3Settings(bufferType, diskBufferPath, proxy, awsCredentials, s3Region, pathStyleAccess)
+    new S3Settings(bufferType, diskBufferPath, proxy, awsCredentials, s3Region, None, secureAccess, pathStyleAccess)
 
   val location = S3Location("bucket", "image-1024@2x")
   val contentType = MediaTypes.`image/jpeg`

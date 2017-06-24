@@ -35,7 +35,7 @@ public class S3ClientTest extends S3WireMockBase {
     //#client
     final AWSCredentials credentials = new BasicCredentials("my-AWS-access-key-ID", "my-AWS-password");
     final Proxy proxy = new Proxy("localhost",port(),"http");
-    final S3Settings settings = new S3Settings(MemoryBufferType.getInstance(),"", Some.apply(proxy),credentials,"us-east-1",false);
+    final S3Settings settings = new S3Settings(MemoryBufferType.getInstance(),"", Some.apply(proxy),credentials,"us-east-1", scala.Option.empty(), true, false);
     final S3Client client = new S3Client(settings, system(), materializer);
     //#client
 

@@ -17,7 +17,7 @@ class S3SourceSpec extends S3WireMockBase with S3ClientIntegrationSpec {
   //#client
   val awsCredentials = AWSCredentials(accessKeyId = "my-AWS-access-key-ID", secretAccessKey = "my-AWS-password")
   val proxy = Option(Proxy("localhost", port, "http"))
-  val settings = new S3Settings(MemoryBufferType, "", proxy, awsCredentials, "us-east-1", false)
+  val settings = new S3Settings(MemoryBufferType, "", proxy, awsCredentials, "us-east-1", None, true, false)
   val s3Client = new S3Client(settings)(system, materializer)
   //#client
 

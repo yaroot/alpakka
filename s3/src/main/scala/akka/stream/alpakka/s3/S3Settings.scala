@@ -5,7 +5,7 @@ package akka.stream.alpakka.s3
 
 import akka.actor.ActorSystem
 import akka.stream.alpakka.s3.auth.AWSCredentials
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 
 final case class Proxy(host: String, port: Int, scheme: String)
 
@@ -14,10 +14,12 @@ final case class S3Settings(bufferType: BufferType,
                             proxy: Option[Proxy],
                             awsCredentials: AWSCredentials,
                             s3Region: String,
+                            s3Endpoint: Option[String],
+                            secureAccess: Boolean,
                             pathStyleAccess: Boolean) {
 
   override def toString: String =
-    s"S3Settings($bufferType,$diskBufferPath,$proxy,$awsCredentials,$s3Region,$pathStyleAccess)"
+    s"S3Settings($bufferType,$diskBufferPath,$proxy,$awsCredentials,$s3Region,$s3Endpoint,$pathStyleAccess)"
 }
 
 sealed trait BufferType
@@ -31,36 +33,39 @@ case object DiskBufferType extends BufferType {
 }
 
 object S3Settings {
+  val DEFAULT_PATH = "akka.stream.alpakka.s3"
 
   /**
    * Scala API: Creates [[S3Settings]] from the [[Config]] attached to an [[ActorSystem]].
    */
-  def apply()(implicit system: ActorSystem): S3Settings = apply(system.settings.config)
+  def apply()(implicit system: ActorSystem): S3Settings = apply(system.settings.config.getConfig(DEFAULT_PATH))
 
   /**
    * Scala API: Creates [[S3Settings]] from a [[Config]] object.
    */
   def apply(config: Config): S3Settings = new S3Settings(
-    bufferType = config.getString("akka.stream.alpakka.s3.buffer") match {
+    bufferType = config.getString("buffer") match {
       case "memory" => MemoryBufferType
       case "disk" => DiskBufferType
       case _ => throw new IllegalArgumentException("Buffer type must be 'memory' or 'disk'")
     },
-    diskBufferPath = config.getString("akka.stream.alpakka.s3.disk-buffer-path"),
+    diskBufferPath = config.getString("disk-buffer-path"),
     proxy = {
-      if (config.getString("akka.stream.alpakka.s3.proxy.host") != "") {
-        val scheme = if (config.getBoolean("akka.stream.alpakka.s3.proxy.secure")) "https" else "http"
+      if (config.getString("proxy.host") != "") {
+        val scheme = if (config.getBoolean("proxy.secure")) "https" else "http"
         Some(
-          Proxy(config.getString("akka.stream.alpakka.s3.proxy.host"),
-                config.getInt("akka.stream.alpakka.s3.proxy.port"),
+          Proxy(config.getString("proxy.host"),
+                config.getInt("proxy.port"),
                 scheme)
         )
       } else None
     },
-    awsCredentials = AWSCredentials(config.getString("akka.stream.alpakka.s3.aws.access-key-id"),
-                                    config.getString("akka.stream.alpakka.s3.aws.secret-access-key")),
-    s3Region = config.getString("akka.stream.alpakka.s3.aws.default-region"),
-    pathStyleAccess = config.getBoolean("akka.stream.alpakka.s3.path-style-access")
+    awsCredentials = AWSCredentials(config.getString("aws.access-key-id"),
+                                    config.getString("aws.secret-access-key")),
+    s3Region = config.getString("aws.default-region"),
+    s3Endpoint = Option("aws.endpoint").filter(config.hasPath).map(config.getString),
+    secureAccess = config.getBoolean("secure-access"),
+    pathStyleAccess = config.getBoolean("path-style-access")
   )
 
   /**

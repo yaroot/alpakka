@@ -15,8 +15,6 @@ import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 
-import scala.concurrent.duration._
-
 class DiskBufferSpec(_system: ActorSystem)
     extends TestKit(_system)
     with FlatSpecLike

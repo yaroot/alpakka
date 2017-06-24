@@ -8,8 +8,6 @@ import java.nio.file.{Files, Path}
 import java.security.DigestInputStream
 import java.security.MessageDigest
 
-import scala.concurrent.Future
-
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.Millis
